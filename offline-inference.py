@@ -3,7 +3,7 @@ import importlib
 
 
 # ➜ source .venv/quickstart/bin/activate
-# ➜ if desired (otherwise will auth from cache): export HUGGINGFACE_HUB_TOKEN="<your_token>"
+# ➜ if desired (otherwise will authorize from cache): export HUGGINGFACE_HUB_TOKEN="<your_token>"
 # ➜ ./run_llama_cpu.sh in project root and it will set up the environment and execute this file
 def main():
     # model_path = "modularai/Llama-3.1-8B-Instruct-GGUF"
