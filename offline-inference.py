@@ -1,16 +1,23 @@
+# from max.entrypoints.llm import LLM
+# from max.pipelines import PipelineConfig
+
 import os
 import importlib
 
 
 # ➜ source .venv/quickstart/bin/activate
-# ➜ if desired (otherwise will authorize from cache): export HUGGINGFACE_HUB_TOKEN="<your_token>"
+# if desired (otherwise will authorize from cache): export HUGGINGFACE_HUB_TOKEN="<your_token>"
 # ➜ ./run_llama_cpu.sh in project root and it will set up the environment and execute this file
+#
+# else, to run non-Hugging Face gated model, set the model_path and run:
+# ➜ python offline-inference.py
 def main():
-    # model_path = "modularai/Llama-3.1-8B-Instruct-GGUF"
     # Specify the direct path to the GGUF file within the repo.
     # The 'gguf' format is automatically recognized.
     # Use the official repo for architecture/tokenizer; provide GGUF weights via WEIGHT_PATHS env.
     model_path = "meta-llama/Llama-3.2-1B-Instruct"
+    """Modular's model path from online tutorial"""
+    # model_path = "modularai/Llama-3.1-8B-Instruct-GGUF"
 
     # Set your Hugging Face token as an environment variable
     # Do NOT hard-code secrets. Ensure HF_TOKEN is set in your shell before running.
@@ -77,6 +84,8 @@ def main():
         )
         raise RuntimeError(f"Failed to build PipelineConfig: {e}{hint}") from e
 
+    # *** Modular specific code for online tutorial from here on ***
+    # pipeline_config = PipelineConfig(model_path=model_path)
     llm = LLM(pipeline_config)
 
     prompts = [

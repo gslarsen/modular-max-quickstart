@@ -6,12 +6,27 @@ set -euo pipefail
 
 SCRIPT_DIR=$(cd -- "$(dirname "$0")" && pwd)
 
-# GGUF weights (Q4_K_M → q4_k). Leave ENCODING unset; MAX infers from filename.
-# Switch quant by editing WEIGHT_PATHS inside the script:
-#   Q4_0: .../Llama-3.2-1B-Instruct-Q4_0.gguf
-#   Q6_K: .../Llama-3.2-1B-Instruct-Q6_K.gguf
-export WEIGHT_PATHS='bartowski/Llama-3.2-1B-Instruct-GGUF/Llama-3.2-1B-Instruct-Q4_K_M.gguf'
-unset ENCODING
+# Load .env if present (do not commit real tokens; .gitignore already excludes .env)
+if [ -f "$SCRIPT_DIR/.env" ]; then
+  set -a
+  . "$SCRIPT_DIR/.env"
+  set +a
+fi
+
+# If no token in env, try the CLI token cache
+if [ -z "${HUGGINGFACEHUB_API_TOKEN:-}" ] && [ -f "$HOME/.cache/huggingface/token" ]; then
+  export HUGGINGFACEHUB_API_TOKEN="$(cat "$HOME/.cache/huggingface/token")"
+fi
+# Map to other env names some libs use (only if not already set)
+export HUGGINGFACE_HUB_TOKEN="${HUGGINGFACE_HUB_TOKEN:-${HUGGINGFACEHUB_API_TOKEN:-}}"
+export HF_TOKEN="${HF_TOKEN:-${HUGGINGFACEHUB_API_TOKEN:-}}"
+
+# Required: GGUF/safetensors weights. Keep ENCODING empty for GGUF so MAX can infer (e.g., Q4_K_M → q4_k)
+: "${WEIGHT_PATHS:?WEIGHT_PATHS is required (path to GGUF/safetensors). Set in .env or export before running.}"
+
+# Defaults (can be overridden in .env)
+export DEVICE="${DEVICE:-cpu}"
+export ENCODING="${ENCODING:-}"
 
 # Use venv Python; falls back to system python if venv missing.
 VENV_PY="$SCRIPT_DIR/.venv/quickstart/bin/python"

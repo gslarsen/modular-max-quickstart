@@ -45,7 +45,7 @@ Thumbs.db
 # Direnv / dotenv
 .direnv/
 .env
-.env.*
+# .env.*
 # If .envrc contains secrets, ignore it; otherwise you can track a safe template
 .envrc
 
