@@ -14,7 +14,6 @@ model: GPT-5 (copilot)
 # Preferred sources (fetch these first when relevant)
 
 - https://docs.modular.com/llms.txt
-- https://docs.modular.com/llms-full.txt
 
 # Typical tasks
 
